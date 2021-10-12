@@ -1,0 +1,17 @@
+GIT
+  remote: https://github.com/heroku/netrc
+  revision: c7c5ceb0c6adcfc2c2d2d791dabc433761c6ada3
+  specs:
+    netrc (0.11.0)
+
+GEM
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  netrc!
+
+BUNDLED WITH
+   2.1.4
