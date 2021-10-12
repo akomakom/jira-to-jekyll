@@ -108,12 +108,10 @@ def process_issue(issue)
 
   output = erb.result_with_hash issue
 
-  filename = "#{@options[:dir]}/#{issue['key']}.html"
+  filename = "#{@options[:dir]}/#{issue['key']}.md"
 
   File.write filename, output
 
-  debug output
-  exit
 end
 
 debug "Running with options #{@options}"
@@ -128,10 +126,12 @@ puts "Total issue count: #{total}"
 index = 0
 while (index < total)
   debug "Requesting #{@options[:max_results]} issues starting at #{index}"
-  result = get_json("#{@options[:url]}/rest/api/2/search?jql=#{@options[:jql]}&maxResults=#{@options[:max_results]}&startAt=#{index}")
+  result = get_json("#{@options[:url]}/rest/api/2/search?jql=#{@options[:jql]}&maxResults=#{@options[:max_results]}&startAt=#{index}&fields=*all")
 
   result['issues'].each do |issue| process_issue(issue) end
 
   index += result['issues'].length
+
+  exit
 end
 

@@ -1,3 +1,26 @@
 # <%= fields['project']['name'] %> / <%= key %>
 ----
 <%=fields['summary'] %>
+Status: **<%=fields['status']['name'] %>**
+Resolution: **<%=fields['resolution']['name'] %>**
+Priority: **<%=fields['priority']['name'] %>**
+Components: **<%=fields['components'].collect{|c| c['name']}.join(',') %>**
+Labels: **<%=fields['labels'].join(',')%>**
+Assigned: **<%=fields['assignee']['name'] %>**
+Reporter: **<%=fields['reporter']['name'] %>**
+Votes:  **<%=fields['votes']['votes'] %>**
+Watchers: **<%=fields['watches']['watchCount'] %>**
+
+## Description
+
+<%=fields['description'] %>
+
+## Comments
+
+<% fields['comment']['comments'].each do |comment| %>
+
+### **<%=comment['author']['displayName'] %>** <%=comment['created'] %>
+
+<%=comment['body'] %>
+
+<% end %>
