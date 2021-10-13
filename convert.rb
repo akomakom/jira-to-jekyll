@@ -6,7 +6,7 @@ require 'json'
 require 'erb'
 require 'fileutils'
 
-@options = {:jql => '', :dir => 'output', :max_results => 1000, :debug => false}
+@options = {:jql => '', :dir => 'jekyll/browse', :max_results => 1000, :debug => false}
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: #{__FILE__ } [@options]"
 
@@ -103,10 +103,15 @@ def init_credentials
 end
 
 def process_issue(issue)
-  puts "Processing issue #{issue}"
+  debug "Processing issue #{issue}"
   erb = ERB.new File.read('issue.erb')
 
-  output = erb.result_with_hash issue
+  begin
+    output = erb.result_with_hash issue
+  rescue
+    puts "Error processing issue #{issue['key']} with content #{JSON.pretty_generate(issue)}"
+    raise
+  end
 
   filename = "#{@options[:dir]}/#{issue['key']}.md"
 

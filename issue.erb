@@ -1,15 +1,60 @@
-# <%= fields['project']['name'] %> / <%= key %>
-----
-<%=fields['summary'] %>
-Status: **<%=fields['status']['name'] %>**
-Resolution: **<%=fields['resolution']['name'] %>**
-Priority: **<%=fields['priority']['name'] %>**
-Components: **<%=fields['components'].collect{|c| c['name']}.join(',') %>**
-Labels: **<%=fields['labels'].join(',')%>**
-Assigned: **<%=fields['assignee']['name'] %>**
-Reporter: **<%=fields['reporter']['name'] %>**
-Votes:  **<%=fields['votes']['votes'] %>**
-Watchers: **<%=fields['watches']['watchCount'] %>**
+---
+<%
+@fields=fields
+# safely get a value from fields array and escape quotes for front matter
+def sanitize(itemname, subitemname = nil)
+  result = ''
+  if @fields[itemname]
+    result = subitemname ? @fields[itemname][subitemname] : @fields[itemname]
+    if result and result.is_a? String
+      result = result.gsub('"', '\"') # escape quotes
+    end
+  end
+  result
+end
+%>
+title: "<%=sanitize('summary') %>"
+layout: issue
+tags: "<%=fields['labels'].join(',')%>"
+permalink: /browse/<%= key %>
+
+issuetype: "<%=sanitize('issuetype', 'name') %>"
+project: "<%= fields['project']['name'] %>"
+project_key: "<%= fields['project']['key'] %>"
+status: "<%=sanitize('status', 'name') %>"
+resolution: "<%=sanitize('resolution', 'name') %>"
+priority: "<%=sanitize('priority', 'name') %>"
+components: "<%=fields['components'].collect{|c| c['name']}.join(',') %>"
+labels: "<%=fields['labels'].join(',')%>"
+assignee: "<%=sanitize('assignee', 'name') %>"
+reporter: "<%=sanitize('reporter', 'name') %>"
+votes:  "<%=sanitize('votes', 'votes') %>"
+watchers: "<%=sanitize('watches', 'watchCount') %>"
+
+created: "<%=fields['created'] %>"
+updated: "<%=fields['updated'] %>"
+resolved: "<%=fields['resolutiondate'] %>"
+
+---
+
+<%
+  def number_format(d)
+    if d
+      d = d.to_i
+      e = Math.log10(d).to_i / 3
+      return '%.3f' % (d / 1000 ** e) + ['', ' k', ' M', ' G'][e]
+    end
+    return ''
+  end
+%>
+
+<% if fields['attachment'] && fields['attachment'].length > 0 %>
+## Attachments
+  <% fields['attachment'].each do |attachment| %>
+* <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%=fields['project']['key']%>/<%=key%>)
+  <% end %>
+
+<% end %>
 
 ## Description
 
@@ -18,9 +63,7 @@ Watchers: **<%=fields['watches']['watchCount'] %>**
 ## Comments
 
 <% fields['comment']['comments'].each do |comment| %>
-
-### **<%=comment['author']['displayName'] %>** <%=comment['created'] %>
-
+### **<%=comment['author']['displayName'] %>** <span class="date"><%=comment['created'] %></span>
 <%=comment['body'] %>
 
 <% end %>
