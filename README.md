@@ -3,7 +3,7 @@
 Useful for those situations where you no longer want to maintain a Jira installation and worry about patching and vulnerabilities.
 This project automates many of the migration steps, and they break down as follows:
 
-## Jira to Markdown
+## Step 1: Jira to Markdown (top-level directory)
 
 ### Jira issues
 
@@ -21,7 +21,7 @@ The markdown pages reference attachments, but this process does not retrieve fil
  
 * Copy the `attachments` directory from your JIRA server to `jekyll/attachments`
 
-## Markdown to Jekyll
+## Step 2: Markdown to Jekyll (jekyll subdirectory)
 
 The `jekyll/` subtree is a sample Jekyll project that can be customized to your look and feel preferences.
 
