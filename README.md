@@ -38,6 +38,13 @@ This is how I used it (applies to both top-level directory and `jekyll/`)
 ```shell
 rbenv install 2.7.3 # or whatever you want to use
 rbenv shell 2.7.3  #select for this shell
-rbenv bundle install # install gems
-rbenv bundle exec jekyll s --watch [--incremental] # incremental is fast but does not apply structural changes
+
+# for conversion step:
+bundle install
+bundle exec ruby convert.rb  
+
+# for jekyll:
+cd jekyll/
+bundle install # install gems
+bundle exec jekyll s --watch [--incremental] # incremental is fast but does not apply structural changes
 ```
