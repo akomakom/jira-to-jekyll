@@ -6,7 +6,7 @@ require 'json'
 require 'erb'
 require 'fileutils'
 
-@options = {:jql => '', :dir => 'jekyll/browse', :max_results => 1000, :debug => false}
+@options = {:jql => '', :dir => 'jekyll/browse', :max_results => 1000, :debug => false, :max_overall => 1000000000}
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: #{__FILE__ } [@options]"
 
@@ -22,8 +22,13 @@ parser = OptionParser.new do |opts|
     @options[:dir] = v.to_i
   end
 
-  opts.on("--max-results N", "API max results, default: #{@options[:max_results]}") do |v|
-    @options[:max_results] = v
+  opts.on("--max-results N", "API max results to request (per http request), default: #{@options[:max_results]}") do |v|
+    @options[:max_results] = v.to_i
+  end
+
+  opts.on("--max-overall N", "Stop after processing this many issues overall (rounded up to max-result), default: #{@options[:max_overall]}") do |v|
+    @options[:max_overall] = v.to_i
+    @options[:max_results] = [@options[:max_results], @options[:max_overall]].min
   end
 
   opts.on("--netrc PATH", "Path to netrc file with credentials (default file is checked automatically") do |v|
@@ -129,14 +134,12 @@ total = result['total']
 puts "Total issue count: #{total}"
 
 index = 0
-while (index < total)
-  debug "Requesting #{@options[:max_results]} issues starting at #{index}"
+while (index < total and index < @options[:max_overall])
+  puts "Requesting #{@options[:max_results]} issues starting at index #{index}"
   result = get_json("#{@options[:url]}/rest/api/2/search?jql=#{@options[:jql]}&maxResults=#{@options[:max_results]}&startAt=#{index}&fields=*all")
 
   result['issues'].each do |issue| process_issue(issue) end
 
   index += result['issues'].length
-
-  exit
 end
 
