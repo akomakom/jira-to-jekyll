@@ -8,7 +8,7 @@ This project automates many of the migration steps, and they break down as follo
 ### Jira issues
 
 `convert.rb` accesses an existing JIRA server with the API and retrieves all (or some) issues, writing them to markdown
-files (in `./browse/` by default).  
+files (in `./jekyll//browse/` by default).  
 **Run with no args for all options.**
 Credential entry interactively or via `.netrc` is supported.
 
@@ -19,7 +19,7 @@ into the front matter section so that layouts can be customized later.
 
 The markdown pages reference attachments, but this process does not retrieve files.  It is faster to do it manually:
  
-* Copy the `attachments` directory from your JIRA server to `jekyll/`
+* Copy the `attachments` directory from your JIRA server to `jekyll/attachments`
 
 ## Markdown to Jekyll
 
