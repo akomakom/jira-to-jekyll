@@ -15,25 +15,25 @@ end
 %>
 title: "<%=sanitize('summary') %>"
 layout: issue
-tags: "<%=fields['labels'].join(',')%>"
+tags: "<%=sanitize('labels').join(',')%>"
 permalink: /browse/<%= key %>
 
 issuetype: "<%=sanitize('issuetype', 'name') %>"
-project: "<%= fields['project']['name'] %>"
-project_key: "<%= fields['project']['key'] %>"
+project: "<%=sanitize('project', 'name') %>"
+project_key: "<%=sanitize('project', 'key') %>"
 status: "<%=sanitize('status', 'name') %>"
 resolution: "<%=sanitize('resolution', 'name') %>"
 priority: "<%=sanitize('priority', 'name') %>"
-components: "<%=fields['components'].collect{|c| c['name']}.join(',') %>"
-labels: "<%=fields['labels'].join(',')%>"
+components: "<%=sanitize('components').collect{|c| c ? c['name'] : ''}.join(',') %>"
+labels: "<%=sanitize('labels').join(',')%>"
 assignee: "<%=sanitize('assignee', 'name') %>"
 reporter: "<%=sanitize('reporter', 'name') %>"
 votes:  "<%=sanitize('votes', 'votes') %>"
 watchers: "<%=sanitize('watches', 'watchCount') %>"
 
-created: "<%=fields['created'] %>"
-updated: "<%=fields['updated'] %>"
-resolved: "<%=fields['resolutiondate'] %>"
+created: "<%=sanitize('created') %>"
+updated: "<%=sanitize('updated') %>"
+resolved: "<%=sanitize('resolutiondate') %>"
 
 ---
 
@@ -48,22 +48,22 @@ resolved: "<%=fields['resolutiondate'] %>"
   end
 %>
 
-<% if fields['attachment'] && fields['attachment'].length > 0 %>
+<% if sanitize('attachment') && sanitize('attachment').length > 0 %>
 ## Attachments
-  <% fields['attachment'].each do |attachment| %>
-* <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%=fields['project']['key']%>/<%=key%>)
+  <% sanitize('attachment').each do |attachment| %>
+* <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%=sanitize('project','key')%>/<%=key%>)
   <% end %>
 
 <% end %>
 
 ## Description
 
-<%=fields['description'] %>
+<%=sanitize('description') %>
 
 ## Comments
 
-<% fields['comment']['comments'].each do |comment| %>
-### **<%=comment['author']['displayName'] %>** <span class="date"><%=comment['created'] %></span>
+<% sanitize('comment', 'comments').each do |comment| %>
+### **<%=comment['author'] ? comment['author']['displayName'] : '?' %>** <span class="date"><%=comment['created'] %></span>
 <%=comment['body'] %>
 
 <% end %>

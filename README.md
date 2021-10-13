@@ -13,7 +13,7 @@ files (in `./jekyll//browse/` by default).
 Credential entry interactively or via `.netrc` is supported.
 
 This process will create files like `jekyll/browse/XXXX-1234.md`, one per issue.  Most of the metadata goes
-into the front matter section so that layouts can be customized later.
+into the front matter section so that layouts can be customized later.  The layout of output files is defined by `issue.erb`
 
 ### Attachments
 
