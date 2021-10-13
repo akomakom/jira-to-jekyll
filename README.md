@@ -33,7 +33,7 @@ feel free to customize or use as a starting point
 
 This is how I used it (applies to both top-level directory and `jekyll/`)
 
-* Because I want to (possibly) host on GitHub Pages, so I am using versions as per https://pages.github.com/versions/
+* Because I want to (possibly) host on GitHub Pages, I am using versions as per https://pages.github.com/versions/
 * Easiest way is to use [rbenv](https://github.com/rbenv/rbenv), then:
 ```shell
 rbenv install 2.7.3 # or whatever you want to use
