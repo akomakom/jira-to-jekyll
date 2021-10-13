@@ -1,6 +1,6 @@
 # Jira to Jekyll converter
 ----
-Useful for those situations where you no longer want to maintain a Jira installation and worry about patching and vulnerabilities.
+Useful for those situations where you no longer want to maintain a historical (inactive) Jira installation and worry about patching and vulnerabilities.
 
 ## Goal
 
