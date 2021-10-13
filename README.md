@@ -17,8 +17,17 @@ files (in `./jekyll//browse/` by default).
 **Run with no args for all options.**
 Credential entry interactively or via `.netrc` is supported.
 
+### Some examples:
+
+(see below for general ruby notes)
+
+* Testing with a subset first: `ruby convert.rb ... --max-overall 20`
+* Using netrc auth in non-standard dir: `ruby convert.rb ... --netrc /path/to/netrc.file`
+* JQL (only export a subset): `ruby convert.rb ... --jql "SOME EXPRESSION"`
+ 
 This process will create files like `jekyll/browse/XXXX-1234.md`, one per issue.  Most of the metadata goes
-into the front matter section so that layouts can be customized later.  The layout of output files is defined by `issue.erb`
+into the front matter section so that layouts can be customized later.  
+The layout of output files is defined by `issue.erb`
 
 ### Attachments
 

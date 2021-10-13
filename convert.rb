@@ -26,12 +26,12 @@ parser = OptionParser.new do |opts|
     @options[:max_results] = v.to_i
   end
 
-  opts.on("--max-overall N", "Stop after processing this many issues overall (rounded up to max-result), default: #{@options[:max_overall]}") do |v|
+  opts.on("--max-overall N", "Stop after processing this many issues overall, default: #{@options[:max_overall]}") do |v|
     @options[:max_overall] = v.to_i
     @options[:max_results] = [@options[:max_results], @options[:max_overall]].min
   end
 
-  opts.on("--netrc PATH", "Path to netrc file with credentials (default file is checked automatically") do |v|
+  opts.on("--netrc PATH", "Path to netrc file with credentials (HOME is checked automatically).") do |v|
     @options[:netrc] = v
   end
 
