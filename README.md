@@ -1,6 +1,11 @@
 # Jira to Jekyll converter
 ----
 Useful for those situations where you no longer want to maintain a Jira installation and worry about patching and vulnerabilities.
+
+## Goal
+
+Convert a Jira installation (issue pages) to Jekyll-generated static content that can be self-hosted or hosted via GitHub Pages.
+
 This project automates many of the migration steps, and they break down as follows:
 
 ## Step 1: Jira to Markdown (top-level directory)
