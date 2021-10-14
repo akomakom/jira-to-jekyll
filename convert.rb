@@ -115,7 +115,7 @@ def process_issue(issue)
     raise
   end
 
-  filename = "#{@options[:dir]}/browse/#{issue['key']}.md"
+  filename = "#{@options[:dir_issues]}/#{issue['key']}.md"
   debug "Writing issue file to #{filename}"
   File.write filename, output
 
@@ -134,7 +134,7 @@ def process_project(project)
       puts "Error processing project #{project_key} from:\n#{JSON.pretty_generate(project)}"
       raise
     end
-    filename = "#{@options[:dir]}/projects/#{project_key}.md"
+    filename = "#{@options[:dir_projects]}/#{project_key}.md"
     puts "Writing project file to #{filename}"
     File.write filename, output
     @seen_projects << project_key
@@ -143,8 +143,11 @@ def process_project(project)
 end
 
 debug "Running with options #{@options}"
-FileUtils.mkdir_p "#{@options[:dir]}/browse"
-FileUtils.mkdir_p "#{@options[:dir]}/projects"
+@options[:dir_issues] = "#{@options[:dir]}/issues"
+@options[:dir_projects] = "#{@options[:dir]}/projects"
+FileUtils.mkdir_p @options[:dir_issues]
+FileUtils.mkdir_p @options[:dir_projects]
+
 init_credentials
 @erb_issue = ERB.new File.read('issue.erb')
 @erb_project = ERB.new File.read('project.erb')

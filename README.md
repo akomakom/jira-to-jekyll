@@ -28,7 +28,7 @@ Credential entry interactively or via `.netrc` is supported.
 * JQL (only export a subset): `ruby convert.rb ... --jql "project = MYPROJECT"`
  
 This process will create the following:
-1. files like `jekyll/browse/XXXX-1234.md`, one per issue.    
+1. files like `jekyll/issues/XXXX-1234.md`, one per issue (Jekyll renders them to /browse/*.html)    
 2. files like `jekyll/projects/XXXX.md`, one per unique project.  These are per-project index pages that are populated by jekyll.
 
 Most of the metadata goes into the front matter section so that layouts can be customized later.  
