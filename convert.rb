@@ -6,7 +6,7 @@ require 'json'
 require 'erb'
 require 'fileutils'
 
-@options = {:jql => '', :dir => 'jekyll/browse', :max_results => 1000, :debug => false, :max_overall => 1000000000}
+@options = {:jql => '', :dir => 'jekyll', :max_results => 1000, :debug => false, :max_overall => 1000000000}
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: #{__FILE__ } [@options]"
 
@@ -52,8 +52,6 @@ unless missing.empty?
   puts parser.help
   raise OptionParser::MissingArgument.new(missing.join(', '))    #
 end
-
-FileUtils.mkdir_p @options[:dir]
 
 
 def prompt(purpose)
@@ -108,24 +106,49 @@ def init_credentials
 end
 
 def process_issue(issue)
-  debug "Processing issue #{issue}"
-  erb = ERB.new File.read('issue.erb')
+  debug "Processing issue with content:\n#{JSON.pretty_generate(issue)}"
 
   begin
-    output = erb.result_with_hash issue
+    output = @erb_issue.result_with_hash issue
   rescue
-    puts "Error processing issue #{issue['key']} with content #{JSON.pretty_generate(issue)}"
+    puts "Error processing issue #{issue['key']} with content:\n#{JSON.pretty_generate(issue)}"
     raise
   end
 
-  filename = "#{@options[:dir]}/#{issue['key']}.md"
-
+  filename = "#{@options[:dir]}/browse/#{issue['key']}.md"
+  debug "Writing issue file to #{filename}"
   File.write filename, output
+
+  if issue['fields'] && issue['fields']['project']
+    process_project issue['fields']['project']
+  end
+end
+
+def process_project(project)
+  debug "Checking for project key in #{project['key']}"
+  project_key = project['key']
+  if project_key && !@seen_projects.include?(project_key)
+    begin
+      output = @erb_project.result_with_hash project
+    rescue
+      puts "Error processing project #{project_key} from:\n#{JSON.pretty_generate(project)}"
+      raise
+    end
+    filename = "#{@options[:dir]}/projects/#{project_key}.md"
+    puts "Writing project file to #{filename}"
+    File.write filename, output
+    @seen_projects << project_key
+  end
 
 end
 
 debug "Running with options #{@options}"
+FileUtils.mkdir_p "#{@options[:dir]}/browse"
+FileUtils.mkdir_p "#{@options[:dir]}/projects"
 init_credentials
+@erb_issue = ERB.new File.read('issue.erb')
+@erb_project = ERB.new File.read('project.erb')
+@seen_projects = []
 
 # Step 1: count the issues
 

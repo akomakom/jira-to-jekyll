@@ -25,11 +25,14 @@ Credential entry interactively or via `.netrc` is supported.
 
 * Testing with a subset first: `ruby convert.rb ... --max-overall 20`
 * Using netrc auth in non-standard dir: `ruby convert.rb ... --netrc /path/to/netrc.file`
-* JQL (only export a subset): `ruby convert.rb ... --jql "SOME EXPRESSION"`
+* JQL (only export a subset): `ruby convert.rb ... --jql "project = MYPROJECT"`
  
-This process will create files like `jekyll/browse/XXXX-1234.md`, one per issue.  Most of the metadata goes
-into the front matter section so that layouts can be customized later.  
-The layout of output files is defined by `issue.erb`
+This process will create the following:
+1. files like `jekyll/browse/XXXX-1234.md`, one per issue.    
+2. files like `jekyll/projects/XXXX.md`, one per unique project.  These are per-project index pages that are populated by jekyll.
+
+Most of the metadata goes into the front matter section so that layouts can be customized later.  
+The layout of output files is defined by `issue.erb` and `project.erb` (but generally should not need changing)
 
 ### Attachments
 

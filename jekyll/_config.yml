@@ -30,6 +30,10 @@ theme: minima
 plugins:
   - jekyll-feed
 
+kramdown:
+  # use Github Flavored Markdown
+  input: GFM
+
 # disable massive minima header with every known page (for now), as it slows everything massively
 header_pages:
   -

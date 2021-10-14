@@ -2,38 +2,64 @@
 <%
 @fields=fields
 # safely get a value from fields array and escape quotes for front matter
-def sanitize(itemname, subitemname = nil)
+def sanitize_for_frontmatter(itemname, subitemname = nil)
   result = ''
   if @fields[itemname]
     result = subitemname ? @fields[itemname][subitemname] : @fields[itemname]
     if result and result.is_a? String
-      result = result.gsub('"', '\"') # escape quotes
+      result = result.gsub('"', '\"').gsub("\\", "\\\\") # escape quotes and backlashes
     end
   end
   result
 end
+
+# escape any markdown syntax and attempt to convert some things like {code}
+def sanitize_for_markdown(value)
+  return nil if not value
+
+  # replace {code:lang}bla{code} blocks with {% highlight lang %}bla{% endhighlight %}
+  # result = value.gsub /{code(:([^}]*))?}((?!{code}).*){code}/m, '{% highlight \\2 %}\\3{% endhighlight %}'
+  @count = 0
+  result = value.gsub(/{code(:([^}]*))?}/) { |tag, lang|
+    # puts "I got #{tag} and #{lang}, count is #{@count}" ; @count +=1
+    @count += 1
+    if @count %2 == 1
+      # lang ? "{% highlight:#{lang} %}" : "{% highlight %}"
+      "\n```#{lang}"
+    else
+      #"{% endhighlight %}"
+      "```\n"
+    end
+  }
+
+
+# escape markdown syntax and other liquid tags
+  result = result.gsub /(\*|_|`{})/, '\\\1'
+
+end
 %>
-title: "<%=sanitize('summary') %>"
+title: "<%= sanitize_for_frontmatter('summary') %>"
 layout: issue
-tags: "<%=sanitize('labels').join(',')%>"
+tags: "<%= sanitize_for_frontmatter('labels').join(',')%>"
 permalink: /browse/<%= key %>
 
-issuetype: "<%=sanitize('issuetype', 'name') %>"
-project: "<%=sanitize('project', 'name') %>"
-project_key: "<%=sanitize('project', 'key') %>"
-status: "<%=sanitize('status', 'name') %>"
-resolution: "<%=sanitize('resolution', 'name') %>"
-priority: "<%=sanitize('priority', 'name') %>"
+issue_key: <%=key %>
+issuetype: "<%= sanitize_for_frontmatter('issuetype', 'name') %>"
+project: "<%= sanitize_for_frontmatter('project', 'name') %>"
+project_key: "<%= sanitize_for_frontmatter('project', 'key') %>"
+status: "<%= sanitize_for_frontmatter('status', 'name') %>"
+resolution: "<%= sanitize_for_frontmatter('resolution', 'name') %>"
+priority: "<%= sanitize_for_frontmatter('priority', 'name') %>"
 components: "<%=fields['components'] ? fields['components'].collect{|c| c ? c['name'] : ''}.join(',') : ''%>"
-labels: "<%=sanitize('labels').join(',')%>"
-assignee: "<%=sanitize('assignee', 'name') %>"
-reporter: "<%=sanitize('reporter', 'name') %>"
-votes:  "<%=sanitize('votes', 'votes') %>"
-watchers: "<%=sanitize('watches', 'watchCount') %>"
+labels: "<%= sanitize_for_frontmatter('labels').join(',')%>"
+assignee: "<%= sanitize_for_frontmatter('assignee', 'name') %>"
+reporter: "<%= sanitize_for_frontmatter('reporter', 'name') %>"
+votes:  "<%= sanitize_for_frontmatter('votes', 'votes') %>"
+watchers: "<%= sanitize_for_frontmatter('watches', 'watchCount') %>"
 
-created: "<%=sanitize('created') %>"
-updated: "<%=sanitize('updated') %>"
-resolved: "<%=sanitize('resolutiondate') %>"
+created: "<%= sanitize_for_frontmatter('created') %>"
+updated: "<%= sanitize_for_frontmatter('updated') %>"
+resolved: "<%= sanitize_for_frontmatter('resolutiondate') %>"
 
 ---
 
@@ -48,22 +74,27 @@ resolved: "<%=sanitize('resolutiondate') %>"
   end
 %>
 
-<% if sanitize('attachment') && sanitize('attachment').length > 0 %>
+{% raw %}
+
+<% if sanitize_for_frontmatter('attachment') && sanitize_for_frontmatter('attachment').length > 0 %>
 ## Attachments
-  <% sanitize('attachment').each do |attachment| %>
-* <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%=sanitize('project','key')%>/<%=key%>)
+  <% sanitize_for_frontmatter('attachment').each do |attachment| %>
+* <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%= sanitize_for_frontmatter('project', 'key')%>/<%= key%>)
   <% end %>
 
 <% end %>
 
 ## Description
 
-<%=sanitize('description') %>
+<%=sanitize_for_markdown fields['description']%>
 
 ## Comments
 
-<% sanitize('comment', 'comments').each do |comment| %>
+<% sanitize_for_frontmatter('comment', 'comments').each do |comment| %>
 ### **<%=comment['author'] ? comment['author']['displayName'] : '?' %>** <span class="date"><%=comment['created'] %></span>
-<%=comment['body'] %>
+
+<%=sanitize_for_markdown comment['body']%>
 
 <% end %>
+
+{% endraw %}
