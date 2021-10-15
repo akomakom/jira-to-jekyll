@@ -11,7 +11,8 @@ layout: default
 
 
     <ul>
-        {% for item in site.pages %}
+        {% assign sorted = site.pages | sort: "issue_numeric_sort_key"  %}
+        {% for item in sorted %}
         {% if item.project_key == page.project%}
         <li>
             <a href="{{ item.url | relative_url }}">{{ item.issue_key | escape }}: {{ item.title | escape }}</a>

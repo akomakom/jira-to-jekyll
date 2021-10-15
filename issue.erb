@@ -44,6 +44,7 @@ tags: "<%= sanitize_for_frontmatter('labels').join(',')%>"
 permalink: /browse/<%= key %>
 
 issue_key: <%=key %>
+issue_numeric_sort_key: <%=key.gsub(/^[^0-9]*([0-9]*)$/, '\\1') %>
 issuetype: "<%= sanitize_for_frontmatter('issuetype', 'name') %>"
 project: "<%= sanitize_for_frontmatter('project', 'name') %>"
 project_key: "<%= sanitize_for_frontmatter('project', 'key') %>"
