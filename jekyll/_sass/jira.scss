@@ -1,4 +1,6 @@
-/* module-key = 'jira.webresources:global-static', location = '/ui/aui-layout/modules.less' */
+/**
+ * some of this is taken from Jira, most is unused
+ */
 .module {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -478,4 +480,21 @@ form.aui.criteria-group-actions label {
 
 #admin-summary-panel .aui-icon-small::before {
   font-size: 14px
+}
+
+div.description, div.comment, #issuedata {
+  background-color: #f0f0f0;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  box-shadow: #aaaaaa 4px 4px;
+  padding: 10px;
+}
+
+.post-title {
+  font-size:25px;
+  font-weight: bold;
+}
+
+.post-header {
+  border-bottom: 3px solid #aaa;
 }

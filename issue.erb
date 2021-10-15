@@ -7,7 +7,7 @@ def sanitize_for_frontmatter(itemname, subitemname = nil)
   if @fields[itemname]
     result = subitemname ? @fields[itemname][subitemname] : @fields[itemname]
     if result and result.is_a? String
-      result = result.gsub('"', '\"').gsub("\\", "\\\\") # escape quotes and backlashes
+      result = result.gsub("\\", "\\\\\\").gsub('"', '\"') # escape quotes and backlashes
     end
   end
   result
@@ -86,14 +86,23 @@ resolved: "<%= sanitize_for_frontmatter('resolutiondate') %>"
 
 ## Description
 
+<div markdown="1" class="description">
+
 <%=sanitize_for_markdown fields['description']%>
+
+</div>
 
 ## Comments
 
 <% sanitize_for_frontmatter('comment', 'comments').each do |comment| %>
+{:.comment-heading}
 ### **<%=comment['author'] ? comment['author']['displayName'] : '?' %>** <span class="date"><%=comment['created'] %></span>
 
+<div markdown="1" class="comment">
+
 <%=sanitize_for_markdown comment['body']%>
+
+</div>
 
 <% end %>
 
