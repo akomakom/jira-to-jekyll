@@ -1,0 +1,24 @@
+---
+layout: default
+---
+
+<div class="home">
+    {%- if page.title -%}
+    <h1 class="page-heading">{{ page.title }}</h1>
+    {%- endif -%}
+
+    {{ content }}
+
+    <h2>Known Projects</h2>
+
+    <ul>
+        {% for item in site.pages %}
+        {% if item.layout == 'project' %}
+        <li>
+            <a href="{{ item.url | relative_url }}">{{ item.project | escape }}: {{ item.title | escape }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+
+</div>
