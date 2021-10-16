@@ -7,7 +7,8 @@ def sanitize_for_frontmatter(itemname, subitemname = nil)
   if @fields[itemname]
     result = subitemname ? @fields[itemname][subitemname] : @fields[itemname]
     if result and result.is_a? String
-      result = result.gsub("\\", "\\\\\\").gsub('"', '\"') # escape quotes and backlashes
+      #result = result.gsub("\\", "\\\\\\").gsub('"', '\"') # escape quotes and backlashes
+      result = result.to_json(result) # json is valid yaml
     end
   end
   result
@@ -38,29 +39,29 @@ def sanitize_for_markdown(value)
 
 end
 %>
-title: "<%= sanitize_for_frontmatter('summary') %>"
+title: <%= sanitize_for_frontmatter('summary') %>
 layout: issue
-tags: "<%= sanitize_for_frontmatter('labels').join(',')%>"
+tags: <%= sanitize_for_frontmatter('labels').join(',')%>
 permalink: /browse/<%= key %>
 
 issue_key: <%=key %>
 issue_numeric_sort_key: <%=key.gsub(/^[^0-9]*([0-9]*)$/, '\\1') %>
-issuetype: "<%= sanitize_for_frontmatter('issuetype', 'name') %>"
-project: "<%= sanitize_for_frontmatter('project', 'name') %>"
-project_key: "<%= sanitize_for_frontmatter('project', 'key') %>"
-status: "<%= sanitize_for_frontmatter('status', 'name') %>"
-resolution: "<%= sanitize_for_frontmatter('resolution', 'name') %>"
-priority: "<%= sanitize_for_frontmatter('priority', 'name') %>"
+issuetype: <%= sanitize_for_frontmatter('issuetype', 'name') %>
+project: <%= sanitize_for_frontmatter('project', 'name') %>
+project_key: <%= sanitize_for_frontmatter('project', 'key') %>
+status: <%= sanitize_for_frontmatter('status', 'name') %>
+resolution: <%= sanitize_for_frontmatter('resolution', 'name') %>
+priority: <%= sanitize_for_frontmatter('priority', 'name') %>
 components: "<%=fields['components'] ? fields['components'].collect{|c| c ? c['name'] : ''}.join(',') : ''%>"
-labels: "<%= sanitize_for_frontmatter('labels').join(',')%>"
-assignee: "<%= sanitize_for_frontmatter('assignee', 'name') %>"
-reporter: "<%= sanitize_for_frontmatter('reporter', 'name') %>"
-votes:  "<%= sanitize_for_frontmatter('votes', 'votes') %>"
-watchers: "<%= sanitize_for_frontmatter('watches', 'watchCount') %>"
+labels: <%= sanitize_for_frontmatter('labels').join(',')%>
+assignee: <%= sanitize_for_frontmatter('assignee', 'name') %>
+reporter: <%= sanitize_for_frontmatter('reporter', 'name') %>
+votes:  <%= sanitize_for_frontmatter('votes', 'votes') %>
+watchers: <%= sanitize_for_frontmatter('watches', 'watchCount') %>
 
-created: "<%= sanitize_for_frontmatter('created') %>"
-updated: "<%= sanitize_for_frontmatter('updated') %>"
-resolved: "<%= sanitize_for_frontmatter('resolutiondate') %>"
+created: <%= sanitize_for_frontmatter('created') %>
+updated: <%= sanitize_for_frontmatter('updated') %>
+resolved: <%= sanitize_for_frontmatter('resolutiondate') %>
 
 ---
 
