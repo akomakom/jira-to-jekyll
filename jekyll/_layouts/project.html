@@ -10,7 +10,7 @@ layout: default
         <h1 class="post-title">{{page.project | escape}} ({{ page.title | escape }}) ({{ sorted.size }})</h1>
     </header>
 
-    <table>
+    <table class="issue-list">
         <tr>
             <th>Issue</th>
             <th>Date</th>
@@ -20,12 +20,12 @@ layout: default
         {% for item in sorted %}
         {% if item.project_key == page.project%}
         <tr>
-            <th>
+            <th class="issue">
                 <a href="{{ item.url | relative_url }}">{{ item.issue_key | escape }}</a>
             </th>
-            <td>{{ item.created | date: "%Y-%m-%d" }}</td>
-            <td>{{ item.status }}</td>
-            <td>{{ item.title | escape }}</td>
+            <td class="date">{{ item.created | date: "%Y-%m-%d" }}</td>
+            <td class="status">{{ item.status }}</td>
+            <td class="summary"><abbr title="{{ item.title | escape }}">{{ item.title | escape | truncate: 80 }}</abbr></td>
         </tr>
         {% endif %}
         {% endfor %}
