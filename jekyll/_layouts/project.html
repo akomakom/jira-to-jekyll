@@ -10,15 +10,26 @@ layout: default
         <h1 class="post-title">{{page.project | escape}} ({{ page.title | escape }}) ({{ sorted.size }})</h1>
     </header>
 
-    <ul>
+    <table>
+        <tr>
+            <th>Issue</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Summary</th>
+        </tr>
         {% for item in sorted %}
         {% if item.project_key == page.project%}
-        <li>
-            <a href="{{ item.url | relative_url }}">{{ item.issue_key | escape }}: {{ item.title | escape }}</a>
-        </li>
+        <tr>
+            <th>
+                <a href="{{ item.url | relative_url }}">{{ item.issue_key | escape }}</a>
+            </th>
+            <td>{{ item.created | date: "%Y-%m-%d" }}</td>
+            <td>{{ item.status }}</td>
+            <td>{{ item.title | escape }}</td>
+        </tr>
         {% endif %}
         {% endfor %}
-    </ul>
+    </table>
 
 
     <div class="post-content">
