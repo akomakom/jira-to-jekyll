@@ -91,5 +91,8 @@ bundle exec ruby convert.rb # see cmd-line options
 # for jekyll (Step 2):
 cd jekyll/
 bundle install # install gems
+# Local testing:
 bundle exec jekyll s --watch [--incremental] [--profile] # incremental is fast but does not apply structural changes
+# Just build ./_site/
+bundle exec jekyll b
 ```

@@ -14,8 +14,10 @@ layout: default
     <ul>
         {% for item in site.pages %}
         {% if item.layout == 'project' %}
+        {% assign count = site.pages | where: "project_key", item.project | size %}
+
         <li>
-            <a href="{{ item.url | relative_url }}">{{ item.project | escape }}: {{ item.title | escape }}</a>
+            <a href="{{ item.url | relative_url }}">{{ item.project | escape }}: {{ item.title | escape }} ({{count}})</a>
         </li>
         {% endif %}
         {% endfor %}
