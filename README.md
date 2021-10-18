@@ -16,7 +16,7 @@ This is a one-time migration process prior to shutting down the old Jira server.
 ### Jira issues
 
 `convert.rb` accesses an existing JIRA server with the API and retrieves all (or some) issues, writing them to markdown
-files (in `./jekyll//browse/` by default).  
+files (in `./jekyll/issues/` by default).  
 **Run with no args for all options.**
 
 #### Authenticating to Jira
