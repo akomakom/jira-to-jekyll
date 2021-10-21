@@ -85,7 +85,7 @@
                     <strong class="name" title="Created">
                         <label for="components">Created:</label>
                     </strong>
-                    <span id="components-val" class="value">{{page.created}}</span>
+                    <span id="components-val" class="value">{{page.created | date: '%B %d, %Y' }}</span>
                 </div>
             </li>
 
@@ -113,7 +113,7 @@
                         <label for="labels-textarea">Updated:</label>
                     </strong>
                     <div class="labels-wrap value">
-                        <span class="labels" id="labels-38172-value">{{page.updated}}</span>
+                        <span class="labels" id="labels-38172-value">{{page.updated | date: '%B %d, %Y' }}</span>
                     </div>
                 </div>
             </li>
@@ -124,7 +124,7 @@
                         <label for="labels-textarea">Resolved:</label>
                     </strong>
                     <div class="labels-wrap value">
-                        <span class="labels" id="labels-38172-value">{{page.resolved}}</span>
+                        <span class="labels" id="labels-38172-value">{{page.resolved | date: '%B %d, %Y' }}</span>
                     </div>
                 </div>
             </li>

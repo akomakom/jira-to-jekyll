@@ -2,6 +2,17 @@
 <%
 @fields=fields
 
+# Used for comment date
+def date_format(value)
+  begin
+    Date.parse(value).strftime('%Y-%m-%d')
+  rescue
+    value
+  end
+
+end
+
+
 def get_field(itemname, subitemname = nil)
   result = ''
   if @fields[itemname]
@@ -88,7 +99,7 @@ resolved: <%= sanitize_for_frontmatter('resolutiondate') %>
 <% if get_field('attachment') && get_field('attachment').length > 0 %>
 ## Attachments
   <% get_field('attachment').each do |attachment| %>
-    * <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%= get_field('project', 'key')%>/<%= key%>/<%=attachment['filename']%>)
+* <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%= get_field('project', 'key')%>/<%= key%>/<%=attachment['filename']%>)
   <% end %>
 
 <% end %>
@@ -105,7 +116,7 @@ resolved: <%= sanitize_for_frontmatter('resolutiondate') %>
 
 <% get_field('comment', 'comments').each do |comment| %>
 {:.comment-heading}
-### **<%=comment['author'] ? comment['author']['displayName'] : '?' %>** <span class="date"><%=comment['created'] %></span>
+### **<%=comment['author'] ? comment['author']['displayName'] : '?' %>** <span class="date"><%=date_format(comment['created'])%></span>
 
 <div markdown="1" class="comment">
 

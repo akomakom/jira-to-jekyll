@@ -5,6 +5,7 @@ require 'netrc'
 require 'json'
 require 'erb'
 require 'fileutils'
+require 'date' 
 
 @options = {:jql => '', :dir => 'jekyll', :max_results => 1000, :debug => false, :max_overall => 1000000000}
 parser = OptionParser.new do |opts|
