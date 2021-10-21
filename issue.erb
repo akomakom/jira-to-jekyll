@@ -1,15 +1,22 @@
 ---
 <%
 @fields=fields
-# safely get a value from fields array and escape quotes for front matter
-def sanitize_for_frontmatter(itemname, subitemname = nil)
+
+def get_field(itemname, subitemname = nil)
   result = ''
   if @fields[itemname]
     result = subitemname ? @fields[itemname][subitemname] : @fields[itemname]
-    if result and result.is_a? String
-      #result = result.gsub("\\", "\\\\\\").gsub('"', '\"') # escape quotes and backlashes
-      result = result.to_json(result) # json is valid yaml
-    end
+  end
+  result
+end
+
+
+# safely get a value from fields array and escape quotes for front matter
+def sanitize_for_frontmatter(itemname, subitemname = nil)
+  result = get_field(itemname, subitemname)
+  if result and result.is_a? String
+    #result = result.gsub("\\", "\\\\\\").gsub('"', '\"') # escape quotes and backlashes
+    result = result.to_json(result) # json is valid yaml
   end
   result
 end
@@ -78,10 +85,10 @@ resolved: <%= sanitize_for_frontmatter('resolutiondate') %>
 
 {% raw %}
 
-<% if sanitize_for_frontmatter('attachment') && sanitize_for_frontmatter('attachment').length > 0 %>
+<% if get_field('attachment') && get_field('attachment').length > 0 %>
 ## Attachments
-  <% sanitize_for_frontmatter('attachment').each do |attachment| %>
-* <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%= sanitize_for_frontmatter('project', 'key')%>/<%= key%>)
+  <% get_field('attachment').each do |attachment| %>
+    * <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%= get_field('project', 'key')%>/<%= key%>/<%=attachment['filename']%>)
   <% end %>
 
 <% end %>
@@ -96,7 +103,7 @@ resolved: <%= sanitize_for_frontmatter('resolutiondate') %>
 
 ## Comments
 
-<% sanitize_for_frontmatter('comment', 'comments').each do |comment| %>
+<% get_field('comment', 'comments').each do |comment| %>
 {:.comment-heading}
 ### **<%=comment['author'] ? comment['author']['displayName'] : '?' %>** <span class="date"><%=comment['created'] %></span>
 

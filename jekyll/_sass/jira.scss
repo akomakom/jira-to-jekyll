@@ -217,3 +217,7 @@ table.issue-list {
 table.issue-list td, table.issue-list th {
   padding: 5px 5px;
 }
+
+table.issue-list abbr {
+  text-decoration: none;
+}
