@@ -1,3 +1,5 @@
 /jira-to-jekyll.iml
 /.idea/
 /output/
+/jekyll/projects/
+/jekyll/issues/
