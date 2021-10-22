@@ -39,19 +39,22 @@ See [netrc](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enet
 This process will create the following:
 1. files like `jekyll/issues/XXXX-1234.md`, one per issue (Jekyll renders them to _site/browse/*.html to preserve Jira URLs)    
 2. files like `jekyll/projects/XXXX.md`, one per unique project.  These are per-project index pages that are populated by jekyll.
+3. attachments (optional, see below)
 
 Most of the metadata goes into the front matter section so that layouts can be customized later.  
 The layout of output files is defined by `issue.erb` and `project.erb` (but generally should not need changing)
 
 ### Attachments
 
-The markdown pages reference attachments, but this process does not retrieve files.  It is faster to do it manually:
- 
-* Copy the `attachments` directory from your JIRA server to `jekyll/attachments`
+There are two options for retrieving attachments:
+1. use `--attachments` to download all attachments to `jekyll/attachments/PROJECT/ISSUE/FILENAME` (same path as in Jira).  This will only download files that do not already exist locally, slowing down the first run.
+2. Copy the `attachments` directory from your JIRA server to `jekyll/attachments`. This is not advisable because the on-disk filenames are often different from URLs.
 
 ## Step 2: Markdown to Jekyll Static Site Build (jekyll subdirectory in this project)
 
-This can be re-run as needed to change the look and feel of the static site.  The migration does not need to be repeated.
+Once migration (above) is complete to your satisfaction, you can treat this subdirectory as a starting point for your new site.
+
+Jekyll steps can be re-run as needed to change the look and feel of the static site.  The migration does not need to be repeated.
 
 The `jekyll/` subtree is a sample Jekyll project that can be customized to your look and feel preferences.
 
@@ -61,7 +64,7 @@ feel free to customize or use as a starting point.
 
 ### Performance
 
-Jekyll can take a while to build the site given a large set of issues. 6+ hours for 32000 issues:
+Jekyll can take a while to build the site given a large set of issues. 6+ hours for 32000 issues (more with attachments):
 ```
 Jekyll Feed: Generating feed for posts
                     ...done in 23880.574032243 seconds.
@@ -71,8 +74,6 @@ You can investigate performance (preferably a subset of your pages) with `--prof
 Individual issue page generation is fairly quick.  
 Iteration (such as in minima theme's navigation) can exponentially slow down build times because the 
 full list of pages shows up in each generated file. It is disabled in `_config.yml` via `header_pages` parameter.
-
-
 
 ## General ruby notes
 

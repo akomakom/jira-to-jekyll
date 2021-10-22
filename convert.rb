@@ -7,7 +7,14 @@ require 'erb'
 require 'fileutils'
 require 'date' 
 
-@options = {:jql => '', :dir => 'jekyll', :max_results => 1000, :debug => false, :max_overall => 1000000000}
+@options = {
+  :jql => '',
+  :dir => 'jekyll',
+  :max_results => 1000,
+  :debug => false,
+  :max_overall => 1000000000,
+  :attachments => false
+}
 parser = OptionParser.new do |opts|
   opts.banner = "Usage: #{__FILE__ } [@options]"
 
@@ -21,6 +28,10 @@ parser = OptionParser.new do |opts|
 
   opts.on("--dir DIRECTORY", "Output directory, default: #{@options[:dir]}") do |v|
     @options[:dir] = v.to_i
+  end
+
+  opts.on("--attachments", "Download attachments that do not exist locally (default #{@options[:attachments]}") do |v|
+    @options[:attachments] = true
   end
 
   opts.on("--max-results N", "API max results to request (per http request), default: #{@options[:max_results]}") do |v|
@@ -87,6 +98,38 @@ def get_json(url)
   result
 end
 
+
+def get_attachment(url, filename)
+  # hack in case of misconfigured jira, replace the url base in the JSON with what we have in options
+  json_uri = URI(url)
+  uri = URI(@options[:url])
+  uri.path = json_uri.path
+
+  debug "Downloading attachment from #{uri} to #{filename}"
+
+  result = nil
+
+  FileUtils.mkdir_p(File.dirname(filename))
+
+  http = Net::HTTP.new(uri.host, uri.port)
+  if @options[:debug]
+    http.set_debug_output $stdout
+  end
+  http.use_ssl = true if uri.instance_of? URI::HTTPS
+  http.start() do |http|
+    debug "GET (attachment): #{uri}"
+    request = Net::HTTP::Get.new uri
+    request.basic_auth @options[:user], @options[:pass]
+    response = http.request request # Net::HTTPResponse object
+    open(filename, "wb") do |file|
+      file.write(response.body)
+    end
+  end
+  result
+
+end
+
+
 def init_credentials
   netrc = {}
   if @options[:netrc]
@@ -123,6 +166,21 @@ def process_issue(issue)
   if issue['fields'] && issue['fields']['project']
     process_project issue['fields']['project']
   end
+
+  if issue['fields'] && issue['fields']['attachment'] && issue['fields']['attachment'].length > 0
+    issue['fields']['attachment'].each do |attachment|
+      process_attachment(issue, attachment)
+    end
+  end
+end
+
+def process_attachment(issue, attachment)
+  filename = "#{@options[:dir_attachments]}/#{issue['fields']['project']['key']}/#{issue['key']}/#{attachment['filename']}"
+  if File.exist? filename and File.size?(filename)
+    debug "Attachment file exists: #{filename}"
+  else
+    get_attachment(attachment['content'], filename)
+  end
 end
 
 def process_project(project)
@@ -146,6 +204,7 @@ end
 debug "Running with options #{@options}"
 @options[:dir_issues] = "#{@options[:dir]}/issues"
 @options[:dir_projects] = "#{@options[:dir]}/projects"
+@options[:dir_attachments] = "#{@options[:dir]}/attachments"
 FileUtils.mkdir_p @options[:dir_issues]
 FileUtils.mkdir_p @options[:dir_projects]
 
