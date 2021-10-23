@@ -98,9 +98,9 @@ resolved: <%= sanitize_for_frontmatter('resolutiondate') %>
 
 <% if get_field('attachment') && get_field('attachment').length > 0 %>
 ## Attachments
-  <% get_field('attachment').each do |attachment| %>
-* <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%= get_field('project', 'key')%>/<%= key%>/<%=attachment['filename']%>)
-  <% end %>
+<% get_field('attachment').each do |attachment| %>
+* <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%= get_field('project', 'key')%>/<%= key%>/<%=attachment['filename'].gsub(/#/,'%23') %>)
+<% end %>
 
 <% end %>
 
