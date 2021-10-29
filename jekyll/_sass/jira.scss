@@ -228,3 +228,9 @@ table.issue-list abbr {
 .attachments .size, .attachments .mimetype {
   font-size: smaller;
 }
+
+// default theme adds bottom margin, looks weird without top margin
+h1, h2, h3, h4, h5, h6, p, blockquote, pre, ul, ol, dl, figure, .highlight {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
