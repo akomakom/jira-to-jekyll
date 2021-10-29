@@ -1,0 +1,16 @@
+{% if page.attachments %}
+
+<h2>Attachments</h2>
+
+<ul class="attachments">
+    {% for attachment in page.attachments %}
+    <li>
+        <span class="author">{{ attachment.author }}</span>
+        <span class="size">({{ attachment.size }})</span>
+        <span class="mimetype">{{ attachment.mimeType }}</span>
+        <span class="filename"><a href="/attachments/{{page.project_key}}/{{page.issue_key}}/{{attachment.filename}}">{{attachment.filename}}</a></span>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endif %}

@@ -9,9 +9,17 @@ def date_format(value)
   rescue
     value
   end
-
 end
 
+# byte size to human-readable string
+def number_format(d)
+  if d
+    d = d.to_i
+    e = Math.log10(d).to_i / 3
+    return '%.2f' % (d / 1000 ** e) + ['', ' k', ' M', ' G'][e]
+  end
+  return ''
+end
 
 def get_field(itemname, subitemname = nil)
   result = ''
@@ -51,9 +59,23 @@ def sanitize_for_markdown(value)
     end
   }
 
+  # for non-indented lines, escape markdown syntax
+  # also don't touch code blocks
+  in_block = false
+  result = result.lines.map{|line| 
+    if line.start_with?('```') 
+      in_block = !in_block
+      line # keep this line as-is
+    else
+      (line.start_with?('    ') or in_block) ? 
+        line 
+        : 
+        line.gsub(/(\*|_|`|{|})/, '\\\\\1')
+    end
+  }.join
 
 # escape markdown syntax and other liquid tags
-  result = result.gsub /(\*|_|`{})/, '\\\1'
+  #result = result.gsub /(\*|_|`|{|})/, '\\\\\1'
 
 end
 %>
@@ -81,28 +103,18 @@ created: <%= sanitize_for_frontmatter('created') %>
 updated: <%= sanitize_for_frontmatter('updated') %>
 resolved: <%= sanitize_for_frontmatter('resolutiondate') %>
 
+<% if get_field('attachment') && get_field('attachment').length > 0 %>attachments:
+<% get_field('attachment').each { |attachment| %>- filename: "<%=attachment['filename']%>"
+  author: "<%=attachment['author'] ? attachment['author']['name'] : '' %>"
+  size: <%=attachment['size'] ? number_format(attachment['size']) : '0'%>
+  mimeType: <%=attachment['mimeType'] %>
+<% } %>
+<% end %>
+
+
 ---
 
-<%
-  def number_format(d)
-    if d
-      d = d.to_i
-      e = Math.log10(d).to_i / 3
-      return '%.3f' % (d / 1000 ** e) + ['', ' k', ' M', ' G'][e]
-    end
-    return ''
-  end
-%>
-
 {% raw %}
-
-<% if get_field('attachment') && get_field('attachment').length > 0 %>
-## Attachments
-<% get_field('attachment').each do |attachment| %>
-* <em><%=attachment['author'] ? attachment['author']['name'] : '' %></em> (<%=number_format(attachment['size']) %>, <%=attachment['mimeType'] %>) [<%=attachment['filename'] %>](/attachments/<%= get_field('project', 'key')%>/<%= key%>/<%=attachment['filename'].gsub(/#/,'%23') %>)
-<% end %>
-
-<% end %>
 
 ## Description
 

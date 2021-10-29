@@ -221,3 +221,10 @@ table.issue-list td, table.issue-list th {
 table.issue-list abbr {
   text-decoration: none;
 }
+
+.attachments .author {
+  font-style: italic;
+}
+.attachments .size, .attachments .mimetype {
+  font-size: smaller;
+}
