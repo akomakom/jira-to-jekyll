@@ -34,7 +34,7 @@ See [netrc](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enet
 (see below for general ruby notes)
 
 * Testing with a subset first: `ruby convert.rb ... --max-overall 20`
-* JQL (only export a subset): `ruby convert.rb ... --jql "project = MYPROJECT"`
+* JQL (only export a subset): `ruby convert.rb ... --jql "project = MYPROJECT"` 
  
 This process will create the following:
 1. files like `jekyll/issues/XXXX-1234.md`, one per issue (Jekyll renders them to _site/browse/*.html to preserve Jira URLs)    
@@ -42,7 +42,7 @@ This process will create the following:
 3. attachments (optional, see below)
 
 Most of the metadata goes into the front matter section so that layouts can be customized later.  
-The layout of output files is defined by `issue.erb` and `project.erb` (but generally should not need changing)
+The layout of markdown files is defined by `issue.erb` and `project.erb` (but generally should not need changing)
 
 ### Attachments
 
@@ -70,7 +70,7 @@ Jekyll Feed: Generating feed for posts
                     ...done in 23880.574032243 seconds.
 ```
 
-You can investigate performance (preferably a subset of your pages) with `--profile`.  
+You can investigate performance (preferably on a subset of your pages) with `--profile`.  
 Individual issue page generation is fairly quick.  
 Iteration (such as in minima theme's navigation) can exponentially slow down build times because the 
 full list of pages shows up in each generated file. It is disabled in `_config.yml` via `header_pages` parameter.
