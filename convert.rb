@@ -15,7 +15,8 @@ require 'logger'
   :loglevel => 'WARN',
   :debughttp => false,
   :max_overall => 1000000000,
-  :attachments => false
+  :attachments => false,
+  :sslnoverify => false,
 }
 
 
@@ -52,9 +53,14 @@ parser = OptionParser.new do |opts|
     @options[:netrc] = v
   end
 
+  opts.on("--sslnoverify", "Accept all server SSL certificates (eg: self-signed).  This is dangerous") do |v|
+    @options[:sslnoverify] = true
+  end
+
   opts.on("--loglevel LEVEL", "Change log level, default: #{@options[:loglevel]}") do |v|
     @options[:loglevel] = v
   end
+
   opts.on("--debug-http", "Turn on debug for network requests") do |v|
     @options[:debughttp] = v
   end
@@ -83,6 +89,9 @@ def make_http(uri)
   http = Net::HTTP.new(uri.host, uri.port)
   if @options[:debughttp]
     http.set_debug_output $stdout
+  end
+  if @options[:sslnoverify] 
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
   end
   http.use_ssl = true if uri.instance_of? URI::HTTPS
   http
